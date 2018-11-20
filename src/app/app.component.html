@@ -1,21 +1,70 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div style="text-align:center; padding-bottom: 10px; background: yellow;">
+  <div class="title">
+    <h1>{{ title }}</h1>
+    <p>Eggead Angular course</p>
+  </div>
+  <p>First toggle controlled here:</p>
+  <div class="test-description">
+    <p>Expose the children component state to parent & controll more than 1 component.</p>
+  </div>
+  <div #firstToggle="toggle" toggle (toggled)="onToggle($event)">
+    <toggle-button></toggle-button>
+    <toggle-on>On</toggle-on>
+    <toggle-off>Off</toggle-off>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+
+<div style="text-align:center; background:aliceblue; padding-top: 10px; padding-bottom: 10px;">
+  <p>Second here...</p>
+  <div [toggleProvider]="firstToggle" toggle (toggled)="onToggle($event)">
+    <toggle-button></toggle-button>
+    <toggle-on>On</toggle-on>
+    <toggle-off>Off</toggle-off>
+  </div>
+</div>
+
+<div style="text-align:center; background:orange; padding-top: 10px; padding-bottom: 10px;">
+  <p>This is another component <code>newToggle</code></p>
+  <div class="test-description">
+    <p>Refactored toggle component using context</p>
+  </div>
+  <new-toggle (toggled)="onToggle($event)">
+    <ng-template let-on="on" let-fns="fns">
+      {{ on ? 'On' : 'Off'}}
+      <switch [on]="on" (click)="fns.toggle()"></switch>
+    </ng-template>
+  </new-toggle>
+</div>
+
+<div style="text-align:center; background:PowderBlue; padding-top: 10px; padding-bottom: 10px;">
+  <p>Let's evolve again <code>newToggle</code></p>
+  <new-toggle (toggled)="onToggle($event)">
+    <ng-template let-on="on" let-fns="fns">
+      <switch toggler [on]="on" (click)="fns.toggle()"></switch>
+      <hr/>
+      <button [toggler]="{ ariaChecked: false }" [role]="'button'" [on]="on" [attr.aria-pressed]="on" (click)="fns.toggle()">
+        {{ on ? 'On' : 'Off'}}
+      </button>
+    </ng-template>
+  </new-toggle>
+</div>
+
+<div style="text-align:center; background:violet; padding-top: 10px; padding-bottom: 10px;">
+  <p>This is another component <code>newToggle</code></p>
+  <div class="test-description">
+    <p>
+      We're going to use the <code>State Reducer Pattern</code> to give the parent control over how that state is updated.
+      We count how many click user does and we will freeze the switch after 3 click.
+    </p>
+  </div>
+  <new-toggle (toggled)="log(toggle, $event)" [stateReducer]="stateReducer">
+    <ng-template let-on="on" let-fns="fns">
+    <switch [on]="on" toggler (click)="fns.toggle()">
+    </switch>
+  </ng-template>
+  </new-toggle>
+</div>
+
 
 <router-outlet></router-outlet>
